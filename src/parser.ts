@@ -239,4 +239,8 @@ export class M3U8Parser {
       `\r\n${playlist.items.map((item) => item.raw).join(`\r\n`)}`,
     );
   }
+
+  public updateItems(items: Map<number, PlaylistItem>): void {
+    this.items = items;
+  }
 }
