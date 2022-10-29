@@ -7,10 +7,10 @@ export {
   PlaylistItemValidator,
 } from "./types.ts";
 
-export type  {
-    ParsedLine,
-    Playlist,
-    PlaylistHeader,
-    PlaylistItem,
-    PlaylistItemTvg,
-} from './types.ts'
+export type {
+  ParsedLine,
+  Playlist,
+  PlaylistHeader,
+  PlaylistItem,
+  PlaylistItemTvg,
+} from "./types.ts";
