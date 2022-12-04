@@ -53,6 +53,7 @@ export class M3U8Parser {
         const referrer = this.getParameter(string, Parameters.REFERER);
 
         if (url) {
+          this.groups.push(item.group.title);
           this.items.set(
             i,
             PlaylistItemValidator.parse({
@@ -68,6 +69,7 @@ export class M3U8Parser {
           );
           i++;
         } else {
+          this.groups.push(item.group.title);
           this.items.set(
             i,
             PlaylistItemValidator.parse({
@@ -117,18 +119,14 @@ export class M3U8Parser {
       return;
     }
 
-    const group = {
-      ...item?.group,
-      title: this.getValue(line) ?? item?.group.title,
-    };
-
-    this.groups.push(group.title);
-
     this.items.set(
       index,
       PlaylistItemValidator.parse({
         ...item,
-        group: group,
+        group: {
+          ...item.group,
+          title: this.getValue(line) ?? item?.group.title,
+        },
         raw: this.mergeRaw(item, line),
       }),
     );
