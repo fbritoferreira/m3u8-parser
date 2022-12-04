@@ -263,7 +263,7 @@ export class M3U8Parser {
 
     const items = groups.reduce((acc: PlaylistItem[], group: string) => {
       const playlistItems = this.getPlaylistItems(group);
-      
+
       return [
         ...acc,
         ...playlistItems,
@@ -297,8 +297,8 @@ export class M3U8Parser {
   public set updatePlaylist(playlist: Playlist) {
     const items = new Map();
     let i = 0;
-    
-    if(playlist.items) {
+
+    if (playlist.items) {
       playlist.items.forEach((item) => {
         items.set(i, PlaylistItemValidator.parse(item));
         i++;
