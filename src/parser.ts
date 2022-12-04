@@ -11,6 +11,7 @@ import {
 
 export class M3U8Parser {
   private rawPlaylist: string;
+  private filteredMap: Map<string, Playlist> = new Map();
 
   private items: Map<number, PlaylistItem> = new Map();
   private header: PlaylistHeader = {} as PlaylistHeader;
@@ -226,12 +227,23 @@ export class M3U8Parser {
     };
   }
   public getPlaylistByGroup(group: string): Playlist {
-    return {
+    const key = group.split("").join("-");
+    const cached = this.filteredMap.get(key);
+
+    if (cached) {
+      return cached;
+    }
+
+    const playlist = {
       header: this.header,
       items: Array.from(this.items.values()).filter((item) =>
         item?.group?.title?.toLowerCase().startsWith(group.toLowerCase())
       ),
     };
+
+    this.filteredMap.set(key, playlist);
+
+    return playlist;
   }
 
   public write(playlist: Playlist): string {
@@ -241,6 +253,7 @@ export class M3U8Parser {
   }
 
   public updateItems(items: Map<number, PlaylistItem>): void {
+    this.filteredMap = new Map();
     this.items = items;
   }
 }
