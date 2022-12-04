@@ -15,6 +15,7 @@ export class M3U8Parser {
 
   private items: Map<number, PlaylistItem> = new Map();
   private header: PlaylistHeader = {} as PlaylistHeader;
+  private groups: string[] = [];
 
   constructor(rawPlaylist: string) {
     this.rawPlaylist = rawPlaylist;
@@ -116,14 +117,18 @@ export class M3U8Parser {
       return;
     }
 
+    const group = {
+      ...item?.group,
+      title: this.getValue(line) ?? item?.group.title,
+    };
+
+    this.groups.push(item.group.title);
+
     this.items.set(
       index,
       PlaylistItemValidator.parse({
         ...item,
-        group: {
-          ...item?.group,
-          title: this.getValue(line) ?? item?.group.title,
-        },
+        group: group,
         raw: this.mergeRaw(item, line),
       }),
     );
@@ -226,6 +231,7 @@ export class M3U8Parser {
       raw: this.rawPlaylist,
     };
   }
+
   public getPlaylistByGroup(group: string): Playlist {
     const key = group.split("").join("-");
     const cached = this.filteredMap.get(key);
@@ -236,14 +242,48 @@ export class M3U8Parser {
 
     const playlist = {
       header: this.header,
-      items: Array.from(this.items.values()).filter((item) =>
-        item?.group?.title?.toLowerCase().startsWith(group.toLowerCase())
-      ),
+      items: this.getPlaylistItems(group),
     };
 
     this.filteredMap.set(key, playlist);
 
     return playlist;
+  }
+
+  private getPlaylistItems(group: string): PlaylistItem[] {
+    return Array.from(this.items.values()).filter((item) =>
+      item?.group?.title?.toLowerCase().startsWith(group.toLowerCase())
+    );
+  }
+
+  public getPlaylistsByGroups(groups: string[]): Playlist {
+    const key = groups.join("-");
+    const cached = this.filteredMap.get(key);
+
+    if (cached) {
+      return cached;
+    }
+
+    const items = groups.reduce((acc, group) => {
+      const items = this.getPlaylistItems(group);
+      return {
+        ...acc,
+        items,
+      };
+    }, []);
+
+    const playlist = {
+      header: this.header,
+      items,
+    };
+
+    this.filteredMap.set(key, playlist);
+
+    return playlist;
+  }
+
+  public get playlistGroups() {
+    return this.groups;
   }
 
   public write(playlist: Playlist): string {
@@ -253,7 +293,6 @@ export class M3U8Parser {
   }
 
   public updateItems(items: Map<number, PlaylistItem>): void {
-    this.filteredMap = new Map();
     this.items = items;
   }
 }
