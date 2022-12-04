@@ -261,12 +261,13 @@ export class M3U8Parser {
       return cached;
     }
 
-    const items = groups.reduce((acc, group) => {
-      const items = this.getPlaylistItems(group);
-      return {
+    const items = groups.reduce((acc: PlaylistItem[], group: string) => {
+      const playlistItems = this.getPlaylistItems(group);
+      
+      return [
         ...acc,
-        items,
-      };
+        ...playlistItems,
+      ];
     }, []);
 
     const playlist = {
@@ -289,7 +290,21 @@ export class M3U8Parser {
     );
   }
 
-  public updateItems(items: Map<number, PlaylistItem>): void {
+  public set updateItems(items: Map<number, PlaylistItem>) {
+    this.items = items;
+  }
+
+  public set updatePlaylist(playlist: Playlist) {
+    const items = new Map();
+    let i = 0;
+    
+    if(playlist.items) {
+      playlist.items.forEach((item) => {
+        items.set(i, PlaylistItemValidator.parse(item));
+        i++;
+      });
+    }
+
     this.items = items;
   }
 }
