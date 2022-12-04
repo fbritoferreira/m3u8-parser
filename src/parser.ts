@@ -290,11 +290,11 @@ export class M3U8Parser {
     );
   }
 
-  public set updateItems(items: Map<number, PlaylistItem>) {
+  public updateItems(items: Map<number, PlaylistItem>) {
     this.items = items;
   }
 
-  public set updatePlaylist(playlist: Playlist) {
+  public updatePlaylist(playlist: Playlist) {
     const items = new Map();
     let i = 0;
 
