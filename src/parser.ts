@@ -15,7 +15,7 @@ export class M3U8Parser {
 
   private items: Map<number, PlaylistItem> = new Map();
   private header: PlaylistHeader = {} as PlaylistHeader;
-  private groups: string[] = [];
+  private groups: Set<string> = new Set();
 
   constructor(rawPlaylist: string) {
     this.rawPlaylist = rawPlaylist;
@@ -51,9 +51,9 @@ export class M3U8Parser {
         const url = this.getUrl(string);
         const user_agent = this.getParameter(string, Parameters.USER_AGENT);
         const referrer = this.getParameter(string, Parameters.REFERER);
+        this.groups.add(item.group.title);
 
         if (url) {
-          this.groups.push(item.group.title);
           this.items.set(
             i,
             PlaylistItemValidator.parse({
@@ -69,7 +69,6 @@ export class M3U8Parser {
           );
           i++;
         } else {
-          this.groups.push(item.group.title);
           this.items.set(
             i,
             PlaylistItemValidator.parse({
@@ -281,7 +280,7 @@ export class M3U8Parser {
   }
 
   public get playlistGroups() {
-    return this.groups;
+    return Array.from(this.groups);
   }
 
   public write(playlist: Playlist): string {
