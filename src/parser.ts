@@ -122,7 +122,7 @@ export class M3U8Parser {
       title: this.getValue(line) ?? item?.group.title,
     };
 
-    this.groups.push(item.group.title);
+    this.groups.push(group.title);
 
     this.items.set(
       index,
