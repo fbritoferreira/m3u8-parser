@@ -83,10 +83,10 @@ export class M3U8Parser {
 
   private mergeRaw(item: PlaylistItem, line: ParsedLine | string) {
     if (typeof line === "string") {
-      return item?.raw ? item.raw.concat(`\r\n${line}`) : `\r\n${line}`;
+      return item?.raw ? item.raw.concat(`${line}`) : `${line}`;
     }
-
-    return item?.raw ? item.raw.concat(`\r\n${line.raw}`) : `\r\n${line.raw}`;
+    
+    return item?.raw ? item.raw.concat(`${line.raw}`) : `${line.raw}`;
   }
 
   parseLine(line: string, index: number): ParsedLine {
@@ -286,7 +286,7 @@ export class M3U8Parser {
 
   public write(playlist: Playlist): string {
     return `${playlist.header.raw}`.concat(
-      `\r\n${playlist.items.map((item) => item.raw).join(`\r\n`)}`,
+      `${playlist.items.map((item) => item.raw).join('')}`,
     );
   }
 
