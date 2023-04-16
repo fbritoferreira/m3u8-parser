@@ -17,7 +17,7 @@ export class M3U8Parser {
   private header: PlaylistHeader = {} as PlaylistHeader;
   private groups: Set<string> = new Set();
 
-  constructor({ playlist, url }: { playlist?: string, url?: string }) {
+  constructor({ playlist, url }: { playlist?: string; url?: string }) {
     if (playlist) {
       this.rawPlaylist = playlist;
       this.parse(playlist);
@@ -294,7 +294,7 @@ export class M3U8Parser {
 
   public write(playlist: Playlist): string {
     return `${playlist.header.raw}`.concat(
-      `${playlist.items.map((item) => item.raw).join('')}`,
+      `${playlist.items.map((item) => item.raw).join("")}`,
     );
   }
 
