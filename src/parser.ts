@@ -10,7 +10,7 @@ import {
 } from "./types.ts";
 
 export class M3U8Parser {
-  private rawPlaylist: string;
+  private rawPlaylist = "";
   private filteredMap: Map<string, Playlist> = new Map();
 
   private items: Map<number, PlaylistItem> = new Map();
@@ -26,8 +26,6 @@ export class M3U8Parser {
     if (url) {
       this.fetchPlaylist({ url });
     }
-
-    throw Error("Playlist or url is required");
   }
 
   private parse(raw: string): void {
