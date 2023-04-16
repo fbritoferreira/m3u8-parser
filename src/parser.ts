@@ -17,9 +17,17 @@ export class M3U8Parser {
   private header: PlaylistHeader = {} as PlaylistHeader;
   private groups: Set<string> = new Set();
 
-  constructor(rawPlaylist: string) {
-    this.rawPlaylist = rawPlaylist;
-    this.parse(rawPlaylist);
+  constructor({ playlist, url }: { playlist?: string, url?: string }) {
+    if (playlist) {
+      this.rawPlaylist = playlist;
+      this.parse(playlist);
+    }
+
+    if (url) {
+      this.fetchPlaylist({ url });
+    }
+
+    throw Error("Playlist or url is required");
   }
 
   private parse(raw: string): void {
@@ -85,7 +93,7 @@ export class M3U8Parser {
     if (typeof line === "string") {
       return item?.raw ? item.raw.concat(`${line}`) : `${line}`;
     }
-    
+
     return item?.raw ? item.raw.concat(`${line.raw}`) : `${line.raw}`;
   }
 
@@ -306,5 +314,16 @@ export class M3U8Parser {
     }
 
     this.items = items;
+  }
+
+  public async fetchPlaylist({ url }: { url: string }) {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch playlist: ${response.status}`);
+    }
+
+    const playlist = await response.text();
+    this.rawPlaylist = playlist;
+    this.parse(playlist);
   }
 }
