@@ -10,12 +10,12 @@ import {
 } from "./types.ts";
 
 export class M3U8Parser {
-  private rawPlaylist = "";
-  private filteredMap: Map<string, Playlist> = new Map();
+  public rawPlaylist = "";
+  public filteredMap: Map<string, Playlist> = new Map();
 
-  private items: Map<number, PlaylistItem> = new Map();
-  private header: PlaylistHeader = {} as PlaylistHeader;
-  private groups: Set<string> = new Set();
+  public items: Map<number, PlaylistItem> = new Map();
+  public header: PlaylistHeader = {} as PlaylistHeader;
+  public groups: Set<string> = new Set();
 
   constructor({ playlist, url }: { playlist?: string; url?: string }) {
     if (playlist) {

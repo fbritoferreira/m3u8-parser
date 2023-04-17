@@ -23,5 +23,5 @@ jobs:
       - name: Check format
         run: deno fmt --check **/*.ts
 
-      # - name: Run tests
-      #   run: deno test.ts
+      - name: Run tests
+        run: deno test src/
