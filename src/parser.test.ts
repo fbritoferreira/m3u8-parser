@@ -4,9 +4,9 @@ import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
 import * as mf from "https://deno.land/x/mock_fetch@0.3.0/mod.ts";
 
 const sharedPlaylist = `#EXTM3U
-#EXTINF:0 tvg-id="ABC" group-title="News" tvg-logo="http://example.com/logo.png", News Channel
+#EXTINF:-1 tvg-id="ABC" group-title="News" tvg-logo="http://example.com/logo.png", News Channel
 http://example.com/news.m3u8
-#EXTINF:0 tvg-id="DEF" group-title="Sports" tvg-logo="http://example.com/logo.png", Sports Channel
+#EXTINF:-1 tvg-id="DEF" group-title="Sports" tvg-logo="http://example.com/logo.png", Sports Channel
 http://example.com/sports.m3u8`;
 
 Deno.test("M3U8Parser parses an M3U8 playlist correctly", () => {
@@ -42,7 +42,7 @@ Deno.test("M3U8Parser parses an M3U8 playlist correctly", () => {
           },
           "url": "http://example.com/news.m3u8",
           "raw":
-            '#EXTINF:0 tvg-id="ABC" group-title="News" tvg-logo="http://example.com/logo.png", News Channelhttp://example.com/news.m3u8',
+            '#EXTINF:-1 tvg-id="ABC" group-title="News" tvg-logo="http://example.com/logo.png", News Channel\nhttp://example.com/news.m3u8',
           "timeshift": "",
           "catchup": {
             "type": "",
@@ -72,7 +72,7 @@ Deno.test("M3U8Parser parses an M3U8 playlist correctly", () => {
           },
           "url": "http://example.com/sports.m3u8",
           "raw":
-            '#EXTINF:0 tvg-id="DEF" group-title="Sports" tvg-logo="http://example.com/logo.png", Sports Channelhttp://example.com/sports.m3u8',
+            '#EXTINF:-1 tvg-id="DEF" group-title="Sports" tvg-logo="http://example.com/logo.png", Sports Channel\nhttp://example.com/sports.m3u8',
           "timeshift": "",
           "catchup": {
             "type": "",
@@ -117,4 +117,24 @@ Deno.test("fetchPlaylist should fetch and parse a playlist", async () => {
   assertEquals(playlist[0].url, "http://example.com/abc");
   assertEquals(playlist[1].name, "DEF News");
   assertEquals(playlist[1].url, "http://example.com/def");
+});
+
+Deno.test("Playlist write method", () => {
+  const playlist = new M3U8Parser({ playlist: sharedPlaylist });
+  const actualOutput = playlist.write();
+
+  assertEquals(actualOutput, sharedPlaylist);
+});
+
+Deno.test("filterPlaylist filters playlist by group", () => {
+  const playlist = new M3U8Parser({ playlist: sharedPlaylist });
+
+  playlist.filterPlaylist(["sports"]);
+
+  assertEquals(
+    playlist.write(),
+    `#EXTM3U
+#EXTINF:-1 tvg-id="DEF" group-title="Sports" tvg-logo="http://example.com/logo.png", Sports Channel
+http://example.com/sports.m3u8`,
+  );
 });

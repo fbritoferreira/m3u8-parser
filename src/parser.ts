@@ -89,10 +89,10 @@ export class M3U8Parser {
 
   private mergeRaw(item: PlaylistItem, line: ParsedLine | string) {
     if (typeof line === "string") {
-      return item?.raw ? item.raw.concat(`${line}`) : `${line}`;
+      return item?.raw ? item.raw.concat(`\n${line}`) : `${line}`;
     }
 
-    return item?.raw ? item.raw.concat(`${line.raw}`) : `${line.raw}`;
+    return item?.raw ? item.raw.concat(`\n${line.raw}`) : `${line.raw}`;
   }
 
   parseLine(line: string, index: number): ParsedLine {
@@ -290,9 +290,11 @@ export class M3U8Parser {
     return Array.from(this.groups);
   }
 
-  public write(playlist: Playlist): string {
-    return `${playlist.header.raw}`.concat(
-      `${playlist.items.map((item) => item.raw).join("")}`,
+  public write(): string {
+    const playlist = this.getPlaylist();
+
+    return `${playlist.header.raw}\n`.concat(
+      `${playlist.items.map((item) => item.raw).join("\n")}`,
     );
   }
 
@@ -323,5 +325,20 @@ export class M3U8Parser {
     const playlist = await response.text();
     this.rawPlaylist = playlist;
     this.parse(playlist);
+  }
+
+  public filterPlaylist(
+    filters?: string[],
+  ) {
+    const groupsToFilter = filters?.map((filter) =>
+      this.playlistGroups.filter((p) =>
+        p.toLowerCase().startsWith(filter.toLowerCase())
+      )
+    ).flat();
+
+    if (groupsToFilter) {
+      const filteredItems = this.getPlaylistsByGroups(groupsToFilter);
+      this.updatePlaylist(filteredItems);
+    }
   }
 }
