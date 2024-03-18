@@ -1,6 +1,6 @@
 import { PlaylistItem } from "./types.ts";
 import { M3U8Parser } from "./parser.ts";
-import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.220.1/assert/mod.ts";
 import * as mf from "https://deno.land/x/mock_fetch@0.3.0/mod.ts";
 
 const sharedPlaylist = `#EXTM3U
