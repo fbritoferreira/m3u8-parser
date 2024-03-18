@@ -1,4 +1,4 @@
-import { z } from "./deps.ts";
+import { z } from "npm:zod";
 
 export interface PlaylistHeader {
   attrs: {

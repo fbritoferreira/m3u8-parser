@@ -1,0 +1,7 @@
+{
+  "imports": {
+    "https://crux.land/router@0.0.5": "./crux.land/api/get/2KNRVU.ts",
+    "https://crux.land/": "./crux.land/",
+    "https://deno.land/": "./deno.land/"
+  }
+}
