@@ -9,6 +9,20 @@ import {
   PlaylistItemValidator,
 } from "./types.ts";
 
+
+/**
+ * M3U8Parser
+ * @class
+ * @classdesc M3U8Parser class is responsible for parsing and filtering m3u8 playlists
+ * @param {string} playlist - m3u8 playlist
+ * @param {string} url - url to fetch m3u8 playlist
+ * @example
+ * const parser = new M3U8Parser({ playlist: "./playlist.m3u8" });
+ * const parser = new M3U8Parser({ url: "http://example.com/playlist.m3u8" });
+ * @returns {M3U8Parser}
+ * @throws {Error} - if playlist is not valid
+ * @throws {Error} - if failed to fetch playlist
+ */
 export class M3U8Parser {
   public rawPlaylist = "";
   public filteredMap: Map<string, Playlist> = new Map();
@@ -227,6 +241,13 @@ export class M3U8Parser {
     return match && match[1] ? match[1] : "";
   }
 
+  /**
+   * getPlaylist
+   * @description returns parsed playlist
+   * @example
+   * const playlist = parser.getPlaylist();
+   * @returns {Playlist} - returns parsed playlist
+   */
   public getPlaylist(): Playlist {
     return {
       header: this.header,
@@ -235,6 +256,14 @@ export class M3U8Parser {
     };
   }
 
+  /**
+   * getPlaylistByGroup
+   * @description returns parsed playlist by group
+   * @param {string} group - group name
+   * @example
+   * const playlist = parser.getPlaylistByGroup("group");
+   * @returns {Playlist} - returns parsed playlist by group
+   */
   public getPlaylistByGroup(group: string): Playlist {
     const key = group.split("").join("-");
     const cached = this.filteredMap.get(key);
@@ -259,6 +288,14 @@ export class M3U8Parser {
     );
   }
 
+  /**
+   * getPlaylistsByGroups
+   * @description returns parsed playlist by groups
+   * @param {string[]} groups - array of group names
+   * @example
+   * const playlist = parser.getPlaylistsByGroups(["group1", "group2"]);
+   * @returns {Playlist} - returns parsed playlist by groups
+   */
   public getPlaylistsByGroups(groups: string[]): Playlist {
     const key = groups.join("-");
     const cached = this.filteredMap.get(key);
@@ -286,10 +323,25 @@ export class M3U8Parser {
     return playlist;
   }
 
+  /**
+   * playlistGroups
+   * @description returns array of group names
+   * @example
+   * const groups = parser.playlistGroups;
+   * @returns {string[]} - returns array of group names
+   */
   public get playlistGroups(): string[] {
     return Array.from(this.groups);
   }
 
+
+  /**
+   * write
+   * @description returns stringified playlist
+   * @example
+   * const playlist = parser.write();
+   * @returns {string} - returns stringified playlist
+   */
   public write(): string {
     const playlist = this.getPlaylist();
 
@@ -297,11 +349,26 @@ export class M3U8Parser {
       `${playlist.items.map((item) => item.raw).join("\n")}`,
     );
   }
-
+  /**
+   * updateItems
+   * @description Updates the playlist items
+   * @param {Map<number, PlaylistItem>} items - map of playlist items
+   * @example
+   * parser.updateItems(new Map());
+   * @returns {void}
+   */
   public updateItems(items: Map<number, PlaylistItem>) {
     this.items = items;
   }
 
+  /**
+   * updatePlaylist
+   * @description Updates the playlist
+   * @param {Playlist} playlist - playlist
+   * @example
+   * parser.updatePlaylist({ header: {}, items: [] });
+   * @returns {void}
+   */
   public updatePlaylist(playlist: Playlist) {
     const items = new Map();
     let i = 0;
@@ -316,6 +383,16 @@ export class M3U8Parser {
     this.items = items;
   }
 
+
+  /**
+   * fetchPlaylist
+   * @description Fetches m3u8 playlist from url
+   * @param {string} url - url to fetch m3u8 playlist
+   * @example
+   * parser.fetchPlaylist({ url: "http://example.com/playlist.m3u8" });
+   * @returns {Promise<void>}
+   * @throws {Error} - if failed to fetch playlist
+   */
   public async fetchPlaylist({ url }: { url: string }) {
     const response = await fetch(url);
     if (!response.ok) {
@@ -327,6 +404,14 @@ export class M3U8Parser {
     this.parse(playlist);
   }
 
+  /**
+   * filterPlaylist
+   * @description Filters the playlist by group
+   * @param {string[]} filters - array of group names
+   * @example
+   * parser.filterPlaylist(["group1", "group2"]);
+   * @returns {void}
+   */
   public filterPlaylist(
     filters?: string[],
   ) {
