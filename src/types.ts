@@ -13,7 +13,7 @@ export type PlaylistItemTvg = {
   url: string;
   logo: string;
   rec: string;
-}
+};
 
 export const PlaylistItemTvgValidator: z.Schema<PlaylistItemTvg> = z.object({
   id: z.string(),
@@ -44,8 +44,7 @@ export type PlaylistItem = {
     source: string;
     days: string;
   };
-
-}
+};
 
 export const PlaylistItemValidator: z.Schema<PlaylistItem> = z.object({
   name: z.string(),
@@ -67,7 +66,6 @@ export const PlaylistItemValidator: z.Schema<PlaylistItem> = z.object({
     days: z.string(),
   }),
 });
-
 
 export interface Playlist {
   header: PlaylistHeader;

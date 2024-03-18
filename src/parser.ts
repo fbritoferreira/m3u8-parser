@@ -9,7 +9,6 @@ import {
   PlaylistItemValidator,
 } from "./types.ts";
 
-
 /**
  * M3U8Parser
  * @class
@@ -334,7 +333,6 @@ export class M3U8Parser {
     return Array.from(this.groups);
   }
 
-
   /**
    * write
    * @description returns stringified playlist
@@ -382,7 +380,6 @@ export class M3U8Parser {
 
     this.items = items;
   }
-
 
   /**
    * fetchPlaylist
