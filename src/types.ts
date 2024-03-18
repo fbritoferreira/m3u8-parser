@@ -7,7 +7,15 @@ export interface PlaylistHeader {
   raw: string;
 }
 
-export const PlaylistItemTvgValidator = z.object({
+export type PlaylistItemTvg = {
+  id: string;
+  name: string;
+  url: string;
+  logo: string;
+  rec: string;
+}
+
+export const PlaylistItemTvgValidator: z.Schema<PlaylistItemTvg> = z.object({
   id: z.string(),
   name: z.string(),
   url: z.string(),
@@ -15,9 +23,31 @@ export const PlaylistItemTvgValidator = z.object({
   rec: z.string(),
 });
 
-export type PlaylistItemTvg = z.infer<typeof PlaylistItemTvgValidator>;
+// export type PlaylistItemTvg = z.infer<typeof PlaylistItemTvgValidator>;
 
-export const PlaylistItemValidator = z.object({
+export type PlaylistItem = {
+  name: string;
+  index: number;
+  tvg: PlaylistItemTvg;
+  group: {
+    title: string;
+  };
+  http: {
+    referrer: string;
+    "user-agent": string;
+  };
+  url?: string;
+  raw: string;
+  timeshift: string;
+  catchup: {
+    type: string;
+    source: string;
+    days: string;
+  };
+
+}
+
+export const PlaylistItemValidator: z.Schema<PlaylistItem> = z.object({
   name: z.string(),
   index: z.number(),
   tvg: PlaylistItemTvgValidator,
@@ -38,7 +68,6 @@ export const PlaylistItemValidator = z.object({
   }),
 });
 
-export type PlaylistItem = z.infer<typeof PlaylistItemValidator>;
 
 export interface Playlist {
   header: PlaylistHeader;

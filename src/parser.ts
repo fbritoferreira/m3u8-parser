@@ -286,7 +286,7 @@ export class M3U8Parser {
     return playlist;
   }
 
-  public get playlistGroups() {
+  public get playlistGroups(): string[] {
     return Array.from(this.groups);
   }
 
